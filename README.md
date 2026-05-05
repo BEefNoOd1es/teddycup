@@ -95,3 +95,52 @@ python main.py
 - 终端会打印出如最大回撤、夏普比率、年化收益率等回测指标。
 - 程序的运行图表会弹出展示。
 - 数据维度的结果（如 `account_value.csv`、`metrics_summary.csv` 以及各项交易明细）会自动保存在 `程序跑通/result/` 子目录中。
+
+## 4. 如何一次性跑通全项目 (新环境运行指南)
+
+为保证评委及其他合作者能够在本地**无报错、一次性跑通**全部流程，强烈建议基于干净的 `Conda` 环境进行部署。
+
+### 第 1 步：环境隔离与创建
+在命令行/终端中运行（需已安装 Anaconda/Miniconda，Python版本推荐 3.9 或 3.10）：
+```bash
+# 创建独立环境
+conda create -n teddy_env python=3.10 -y
+# 激活环境
+conda activate teddy_env
+```
+
+### 第 2 步：安装依赖库与内核
+在项目根目录（或新建一个 `requirements.txt` 并写入以下内容）：
+```txt
+pandas
+numpy
+matplotlib
+networkx
+playwright
+openai
+```
+随后执行以下命令安装 Python 库，并配置浏览器内核：
+```bash
+pip install -r requirements.txt
+# 这一步非常重要，用于安装 cls.py 需要的无头浏览器依赖！
+playwright install  
+```
+
+### 第 3 步：配置 API Key (重要)
+在运行前，请打开 `程序/llm_analyze.py` 和可能调用的 API 脚本，在代码内找到 `API_KEY = "你的密钥"` 或者设定系统环境变量，替换为实际的 OpenAI/DeepSeek 鉴权密钥。如无环境生成新事件，这一步可选。
+
+### 第 4 步：顺序执行全流水线
+1. **[生成端/非必循] 数据爬取与情绪标注：**
+   ```bash
+   python 程序/llm_analyze.py
+   python 程序/Task2_KnowledgeGraph.py
+   ```
+2. **[集成干线] 将分析所得数据自动化过滤并组装至回测数据库：**
+   ```bash
+   python 程序/main_pipeline.py
+   ```
+3. **[回测终端] 运行核心选股及风控回测以输出可视化：**
+   ```bash
+   python 程序/main.py
+   ```
+*运行结束后，程序的表现（累积净值曲线、夏普、最大回撤等）都将在图形界面及终端依次抛出。*
