@@ -130,17 +130,18 @@ playwright install
 在运行前，请打开 `程序/llm_analyze.py` 和可能调用的 API 脚本，在代码内找到 `API_KEY = "你的密钥"` 或者设定系统环境变量，替换为实际的 OpenAI/DeepSeek 鉴权密钥。如无环境生成新事件，这一步可选。
 
 ### 第 4 步：顺序执行全流水线
-1. **[生成端/非必循] 数据爬取与情绪标注：**
+1. **数据爬取与情绪标注：**
    ```bash
-   python 程序/llm_analyze.py
-   python 程序/Task2_KnowledgeGraph.py
+   python cls.py
+   python llm_analyze.py
+
    ```
-2. **[集成干线] 将分析所得数据自动化过滤并组装至回测数据库：**
+2. **将分析所得数据自动化过滤并组装至回测数据库：**
    ```bash
-   python 程序/main_pipeline.py
+   python main_pipeline.py
    ```
-3. **[回测终端] 运行核心选股及风控回测以输出可视化：**
+3. **运行核心选股及风控回测以输出可视化：**
    ```bash
-   python 程序/main.py
+   python main.py
    ```
-*运行结束后，程序的表现（累积净值曲线、夏普、最大回撤等）都将在图形界面及终端依次抛出。*
+
